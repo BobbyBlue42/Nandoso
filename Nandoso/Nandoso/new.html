@@ -4,6 +4,27 @@
     <title>Nandoso - New Review</title>
     <link rel="stylesheet" href="css/basicstyle.css" />
     <script src="js/review.js"></script>
+    <script src="js/internet.js"></script>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.json.org/json2.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var frm = $(document.submitForm);
+            var dat = JSON.stringify(frm.serializeArray());
+
+            alert("I am about to POST this:\n\n" + dat);
+
+            $.post(
+              frm.attr("action"),
+              dat,
+              function (data) {
+                  alert("Response: " + data);
+              }
+            );
+        });
+    </script>
+
 </head>
 <body>
     <header>
@@ -18,34 +39,28 @@
             <li><a href="reviews.html">Reviews</a></li>
         </ul>
     </aside>
-    <section>
+    <form name="submitForm" method="post" action="http://localhost:24530/api/Reviews">
         Your name:
         <br />
-        <input type="text" id="nameBox" autofocus />
+        <input type="text" name="submitter" autofocus value="Jack" />
         <br />
         The item you wish to review:
         <br />
-        <select id="dropDown">
-            <option value=""></option>
+        <select name="appliesTo">
+            <option value="Half Chicken">Half Chicken</option>
         </select>
         <br />
         Your rating, out of 10:
         <br />
-        <input type="range" min="1" max="10" id="scoreBox" />
+        <input type="range" min="1" max="10" name="reviewValue" value="10" />
         <br />
         Your review:
         <br />
-        <textarea id="reviewBox" rows="7" cols="150"></textarea>
+        <textarea name="review" rows="7" cols="150">big gud</textarea>
         <br />
-        <input type="button" value="Submit" onclick="submit();" />
-        <!--
-        public string submitter { get; set; }
-        public string review { get; set; }
-
-        public virtual Item appliesTo { get; set; }
-        public int reviewValue { get; set; }
-        -->
-    </section>
+        <input type="submit" />
+    </form>
+    <!--input type="button" value="Submit" onclick="submit();" style="margin-left: 15%"/-->
 
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
     <script>
@@ -58,36 +73,35 @@
                     setupDropDown(data);
                 });
         });
+    </script>
 
-        function submit() {
-            var name = $('#nameBox').val();
-            var itemName = $('#dropDown').val();
-            var rating = $('#scoreBox').val();
-            var review = $('#reviewBox').val();
-            var date = new Date();
+    <script>
+    var form;
 
-            $.post('api/Reviews',
-                {
-                    submitter: name,
-                    review: review,
-                    reviewDate: date,
-                    repliedTo: false,
-                    appliesTo: {
-                        ID: item.ID,
-                        name: item.name,
-                        price: item.price,
-                        vegetarian: item.vegetarian,
-                        glutenFree: item.glutenFree,
-                        discount: item.discount
-                    },
-                    reviewValue: rating
-                },
-                function (data, status) {
-                    alert("Data:\n" + data + "\nStatus\n" + status);
-                })
-            //new Review { appliesTo = items.SingleOrDefault(i => i.name.Equals("8 BBQ Ribs")), review = "the ribs were just meh ive had better from other shops", reviewValue = 4,
-            //                     reviewDate = new DateTime(2015, 11, 22), submitter = "Jim", repliedTo = false}
+    form.onsubmit = function (e) {
+        alert("form submitted");
+        e.preventDefault();
+
+        var data = {};
+        for (var i = 0, ii = form.length; i < ii; ++i) {
+            var input = form[i];
+            if (input.name) {
+                data[input.name] = input.value;
+            }
         }
+
+        var xhr = new XMLHttpRequest();
+        xhr.setRequestHeader('Content-Type', 'text/json');
+
+        xhr.send(JSON.stringify(data));
+
+        xhr.onloadend = function () {
+            alert("finished post");
+        };
+    };
+    </script>
+    <script>
+        Internet();
     </script>
 </body>
 </html>
