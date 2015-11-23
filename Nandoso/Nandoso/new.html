@@ -5,26 +5,6 @@
     <link rel="stylesheet" href="css/basicstyle.css" />
     <script src="js/review.js"></script>
     <script src="js/internet.js"></script>
-
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://www.json.org/json2.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            var frm = $(document.submitForm);
-            var dat = JSON.stringify(frm.serializeArray());
-
-            alert("I am about to POST this:\n\n" + dat);
-
-            $.post(
-              frm.attr("action"),
-              dat,
-              function (data) {
-                  alert("Response: " + data);
-              }
-            );
-        });
-    </script>
-
 </head>
 <body>
     <header>
@@ -39,7 +19,7 @@
             <li><a href="reviews.html">Reviews</a></li>
         </ul>
     </aside>
-    <form name="submitForm" method="post" action="http://localhost:24530/api/Reviews">
+    <form name="submitForm" method="post" action="/api/Reviews">
         Your name:
         <br />
         <input type="text" name="submitter" autofocus value="Jack" />
