@@ -1,0 +1,105 @@
+﻿body {
+    background-color: #EA0003;
+}
+
+h1 {
+    color: #FFBB00;
+    font-size: 100px;
+    font-family: 'Comic Sans MS';
+    text-align: center;
+}
+
+.menuBar {
+    float: left;
+    font-size: 12px;
+    font-family: Arial;
+    text-align: left;
+    background-color: #E87475;
+    width: 10%;
+    height: 100%;
+    margin-right: 5%;
+}
+
+section {
+    margin-left: 15%;
+}
+
+#logo {
+    float: left;
+    width: 200px;
+    height: 200px;
+}
+
+header {
+    margin-bottom: 100px;
+}
+
+footer {
+    font-size: 12px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-color: #EA0003;
+    border-style: solid;
+    border-width: thin;
+    background-color: white;
+    text-align: right;
+}
+
+table {
+    font-size: 16px;
+    background-color: #F88485;
+    padding: 5px, 5px, 5px, 5px;
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    width: 85%;
+}
+
+th {
+    border-color: grey;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.tickBox {
+    border-bottom: 1px solid grey;
+    text-align: center;
+}
+
+.priceField {
+    border-bottom: 1px solid grey;
+    text-align: right;
+}
+
+.basePriceField {
+    border-bottom: 1px solid grey;
+    text-align: right;
+    text-decoration: line-through;
+}
+
+.discountField {
+    border-bottom: 1px solid grey;
+    text-align: right;
+}
+
+.discountPriceField {
+    border-bottom: 1px solid grey;
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.itemField {
+    border-bottom: 1px solid grey;
+}
+
+#reviewDiv {
+    background-color: #F88485;
+    padding: 5px, 5px, 5px, 5px;
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    width: 85%;
+}
