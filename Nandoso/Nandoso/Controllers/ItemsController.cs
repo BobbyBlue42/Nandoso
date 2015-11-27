@@ -36,8 +36,9 @@ namespace Nandoso.Controllers
         }
 
         // PUT: api/Items/5
+        // Since this method can edit the database, it requires authorisation.
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutItem(int id, Item item)
+        public IHttpActionResult PutItem(int id, Item item, string username, string password)
         {
             if (!ModelState.IsValid)
             {
@@ -49,56 +50,100 @@ namespace Nandoso.Controllers
                 return BadRequest();
             }
 
-            db.Entry(item).State = EntityState.Modified;
-
-            try
+            foreach (Admin a in db.Admins.ToList())
             {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemExists(id))
+                if (a.username.Equals(username))
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                    if (a.password.Equals(password))
+                    {
+                        db.Entry(item).State = EntityState.Modified;
 
-            return StatusCode(HttpStatusCode.NoContent);
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!ItemExists(id))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+
+                        return StatusCode(HttpStatusCode.NoContent);
+                    }
+
+                    // If the password is incorrect for this username,
+                    // it will not be correct for other usernames either.
+                    break;
+                }
+            }
+            return StatusCode(HttpStatusCode.Unauthorized);
         }
 
         // POST: api/Items
+        // Since this method can edit the database, it requires authorisation.
         [ResponseType(typeof(Item))]
-        public IHttpActionResult PostItem(Item item)
+        public IHttpActionResult PostItem(Item item, string username, string password)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Items.Add(item);
-            db.SaveChanges();
+            foreach (Admin a in db.Admins.ToList())
+            {
+                if (a.username.Equals(username))
+                {
+                    if (a.password.Equals(password))
+                    {
+                        db.Items.Add(item);
+                        db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = item.ID }, item);
+                        return CreatedAtRoute("DefaultApi", new { id = item.ID }, item);
+                    }
+
+                    // If the password is incorrect for this username,
+                    // it will not be correct for other usernames either.
+                    break;
+                }
+            }
+            return StatusCode(HttpStatusCode.Unauthorized);
         }
 
         // DELETE: api/Items/5
+        // Since this method can edit the database, it requires authorisation.
         [ResponseType(typeof(Item))]
-        public IHttpActionResult DeleteItem(int id)
+        public IHttpActionResult DeleteItem(int id, string username, string password)
         {
-            Item item = db.Items.Find(id);
-            if (item == null)
+            foreach (Admin a in db.Admins.ToList())
             {
-                return NotFound();
+                if (a.username.Equals(username))
+                {
+                    if (a.password.Equals(password))
+                    {
+                        Item item = db.Items.Find(id);
+                        if (item == null)
+                        {
+                            return NotFound();
+                        }
+
+                        db.Items.Remove(item);
+                        db.SaveChanges();
+
+                        return Ok(item);
+                    }
+
+                    // If the password is incorrect for this username,
+                    // it will not be correct for other usernames either.
+                    break;
+                }
             }
-
-            db.Items.Remove(item);
-            db.SaveChanges();
-
-            return Ok(item);
+            return StatusCode(HttpStatusCode.Unauthorized);
         }
 
         protected override void Dispose(bool disposing)

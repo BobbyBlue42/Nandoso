@@ -37,7 +37,7 @@ namespace Nandoso.Controllers
 
         // PUT: api/Reviews/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutReview(int id, Review review)
+        public IHttpActionResult PutReview(int id, Review review, string username, string password)
         {
             if (!ModelState.IsValid)
             {
@@ -49,25 +49,39 @@ namespace Nandoso.Controllers
                 return BadRequest();
             }
 
-            db.Entry(review).State = EntityState.Modified;
-
-            try
+            foreach (Admin a in db.Admins.ToList())
             {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReviewExists(id))
+                if (a.username.Equals(username))
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                    if (a.password.Equals(password))
+                    {
+                        db.Entry(review).State = EntityState.Modified;
 
-            return StatusCode(HttpStatusCode.NoContent);
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!ReviewExists(id))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+
+                        return StatusCode(HttpStatusCode.NoContent);
+                    }
+
+                    // If the password is incorrect for this username,
+                    // it will not be correct for other usernames either.
+                    break;
+                }
+            }
+            return StatusCode(HttpStatusCode.Unauthorized);
         }
 
         // POST: api/Reviews
@@ -87,18 +101,31 @@ namespace Nandoso.Controllers
 
         // DELETE: api/Reviews/5
         [ResponseType(typeof(Review))]
-        public IHttpActionResult DeleteReview(int id)
-        {
-            Review review = db.Reviews.Find(id);
-            if (review == null)
+        public IHttpActionResult DeleteReview(int id, string username, string password)
+        {foreach (Admin a in db.Admins.ToList())
             {
-                return NotFound();
+                if (a.username.Equals(username))
+                {
+                    if (a.password.Equals(password))
+                    {
+                        Review review = db.Reviews.Find(id);
+                        if (review == null)
+                        {
+                            return NotFound();
+                        }
+
+                        db.Reviews.Remove(review);
+                        db.SaveChanges();
+
+                        return Ok(review);
+                    }
+
+                    // If the password is incorrect for this username,
+                    // it will not be correct for other usernames either.
+                    break;
+                }
             }
-
-            db.Reviews.Remove(review);
-            db.SaveChanges();
-
-            return Ok(review);
+        return StatusCode(HttpStatusCode.Unauthorized);
         }
 
         protected override void Dispose(bool disposing)

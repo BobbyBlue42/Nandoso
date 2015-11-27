@@ -126,13 +126,6 @@ function setupReviewSection(reviews) {
         row_score.appendChild(col_score);
         table.appendChild(row_score);
 
-        var row_date = document.createElement("tr");
-        var col_date = document.createElement("td");
-        var date = new Date(reviews[i].reviewDate);
-        col_date.innerHTML = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-        row_date.appendChild(col_date);
-        table.appendChild(row_date);
-
         var row_review = document.createElement("tr");
         var col_review = document.createElement("td");
         col_review.innerHTML = reviews[i].review;

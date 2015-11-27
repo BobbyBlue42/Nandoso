@@ -22,13 +22,11 @@
     <form name="submitForm" method="post" action="/api/Reviews">
         Your name:
         <br />
-        <input type="text" name="submitter" autofocus value="Jack" />
+        <input type="text" name="submitter" autofocus />
         <br />
         The item you wish to review:
         <br />
-        <select name="appliesTo">
-            <option value="Half Chicken">Half Chicken</option>
-        </select>
+        <input type="text" name="appliesTo" />
         <br />
         Your rating, out of 10:
         <br />
@@ -36,24 +34,13 @@
         <br />
         Your review:
         <br />
-        <textarea name="review" rows="7" cols="150">big gud</textarea>
+        <textarea name="review" rows="7" cols="150"></textarea>
         <br />
         <input type="submit" />
     </form>
     <!--input type="button" value="Submit" onclick="submit();" style="margin-left: 15%"/-->
 
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
-    <script>
-        var uri = 'api/Items';
-        $(window).load(function () {
-            // Send an AJAX request
-            $.getJSON(uri)
-                .done(function (data) {
-                    // On success, 'data' contains a list of products.
-                    setupDropDown(data);
-                });
-        });
-    </script>
 
     <script>
     var form;
